@@ -1,0 +1,49 @@
+{
+    "balance": 1500000.0,
+    "total_income": 6050000.0,
+    "total_expense": 4550000.0,
+    "transactions": [
+        {
+            "id": 1,
+            "type": "thu",
+            "amount": 5000000.0,
+            "description": "Lương tháng 2",
+            "date": "2026-02-20 23:26:25"
+        },
+        {
+            "id": 2,
+            "type": "chi",
+            "amount": 50000.0,
+            "description": "Ăn sáng",
+            "date": "2026-02-20 23:26:25"
+        },
+        {
+            "id": 3,
+            "type": "thu",
+            "amount": 1000000.0,
+            "description": "L",
+            "date": "2026-02-21 00:02:04"
+        },
+        {
+            "id": 4,
+            "type": "thu",
+            "amount": 50000.0,
+            "description": "linh",
+            "date": "2026-02-21 00:04:25"
+        },
+        {
+            "id": 5,
+            "type": "chi",
+            "amount": 1000000.0,
+            "description": "chi tiêu ăn uống",
+            "date": "2026-02-21 00:04:37"
+        },
+        {
+            "id": 6,
+            "type": "chi",
+            "amount": 3500000.0,
+            "description": "chi tiêu ăn uống",
+            "date": "2026-02-21 00:06:17"
+        }
+    ]
+}
