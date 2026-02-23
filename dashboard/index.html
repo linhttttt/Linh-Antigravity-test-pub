@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyLife Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome / Material Icons (using Font Awesome for simplicity) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <div class="logo-text">
+                    <h1>MyLife</h1>
+                    <p>TRUNG TÂM NĂNG SUẤT</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <i class="fa-solid fa-border-all"></i>
+                    <span>Tổng quan</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span>Tài chính</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-regular fa-square-check"></i>
+                    <span>Công việc</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-regular fa-heart"></i>
+                    <span>Sức khỏe</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Cài đặt</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-timer">
+                <div class="timer-label">PHIÊN TẬP TRUNG</div>
+                <div class="timer-display">
+                    <h2>25:00</h2>
+                    <button class="play-btn" id="start-pomodoro"><i class="fa-solid fa-play"></i></button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <header class="header">
+                <div class="greeting">
+                    <h1>Chào buổi sáng, Anh Dũng 👋</h1>
+                    <p>HÔM NAY LÀ CHỦ NHẬT, 11 THÁNG 1</p>
+                </div>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Tìm kiếm...">
+                    </div>
+                    <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+                    <button class="icon-btn"><i class="fa-regular fa-calendar"></i></button>
+                    <div class="avatar">
+                        <img src="https://i.pravatar.cc/150?u=a042581f4e29026024d" alt="Profile avatar">
+                    </div>
+                </div>
+            </header>
+
+            <!-- DASHBOARD GRID -->
+            <div class="dashboard-grid">
+
+                <!-- TOP ROW -->
+                <div class="top-row">
+                    <!-- FINANCE CARD -->
+                    <div class="card finance-card">
+                        <div class="card-header">
+                            <span class="badge">NGÂN SÁCH</span>
+                            <span class="card-label">SỐ DƯ</span>
+                        </div>
+                        <div class="card-body row-flex">
+                            <h2>Tài chính cá nhân</h2>
+                            <h2 class="balance" id="display-balance">0 ₫</h2>
+                        </div>
+                        <div class="finance-actions" style="display: flex; gap: 8px; margin-bottom: 24px;">
+                            <button class="btn btn-income" onclick="openTransactionModal('thu')">
+                                <i class="fa-solid fa-plus"></i> Thêm khoản Thu
+                            </button>
+                            <button class="btn btn-expense" onclick="openTransactionModal('chi')">
+                                <i class="fa-solid fa-minus"></i> Thêm khoản Chi
+                            </button>
+                        </div>
+                        <div class="progress-section">
+                            <div class="progress-info">
+                                <div class="progress-icon"><i class="fa-solid fa-chart-line"></i></div>
+                                <div>
+                                    <div class="progress-title">Tiến độ chi tiêu</div>
+                                    <div class="progress-subtitle">Dựa trên thu/chi</div>
+                                </div>
+                                <div class="progress-percentage" id="display-percentage">0%</div>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="display-progress-bar" style="width: 0%;"></div>
+                            </div>
+                            <div class="progress-footer">
+                                <span id="display-expense">Đã chi: 0 ₫</span>
+                                <span id="display-income">Tổng thu: 0 ₫</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TASKS CARD -->
+                    <div class="card tasks-card">
+                        <div class="card-header">
+                            <span class="badge warning-badge">ƯU TIÊN</span>
+                            <div class="warning-icon"><i class="fa-solid fa-exclamation"></i></div>
+                        </div>
+                        <h2>Công việc</h2>
+
+                        <div class="urgent-timer">
+                            <div class="timer-title">THỜI HẠN</div>
+                            <h3 class="countdown">03:42:15</h3>
+                            <p class="timer-desc">Hoàn thiện UI</p>
+                        </div>
+
+                        <div class="tasks-list-container">
+                            <h4 class="tasks-heading">NHIỆM VỤ (2)</h4>
+                            <div class="task-item">
+                                <input type="checkbox" id="task1">
+                                <label for="task1">Xem báo cáo Q3</label>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" id="task2">
+                                <label for="task2">Họp khách hàng</label>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" id="task3" checked>
+                                <label for="task3" class="checked-label">Thiết kế V2</label>
+                            </div>
+
+                            <button class="add-task-btn">
+                                <i class="fa-solid fa-plus"></i> Thêm nhiệm vụ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTTOM ROW -->
+                <div class="bottom-row">
+                    <!-- WEATHER CARD -->
+                    <div class="card small-card weather-card">
+                        <span class="badge transparent-badge">THỜI TIẾT</span>
+                        <div class="weather-temp">-9°C</div>
+                        <div class="weather-info">
+                            <h3>Thành phố Huế</h3>
+                            <div class="weather-condition">
+                                <div>
+                                    <p>Sương Mù Đóng Băng</p>
+                                    <small>Hôm nay</small>
+                                </div>
+                                <i class="fa-solid fa-cloud-sun"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HEALTH CARD -->
+                    <div class="card small-card health-card">
+                        <span class="badge transparent-badge">SỨC KHỎE</span>
+                        <div class="health-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                        <h2 class="steps-count">8,432</h2>
+                        <p class="steps-desc">Bước chân hôm nay</p>
+                        <div class="health-progress-container">
+                            <div class="health-progress-bar" style="width: 84%;"></div>
+                        </div>
+                        <small class="health-target">Mục tiêu: 10,000 bước</small>
+                    </div>
+
+                    <!-- ENTERTAINMENT CARD -->
+                    <div class="card small-card entertainment-card">
+                        <div class="record-bars">
+                            <span class="badge dark-badge">GIẢI TRÍ</span>
+                            <div class="bars-icon">
+                                <span></span><span></span><span></span>
+                            </div>
+                        </div>
+                        <div class="music-player">
+                            <div class="song-info">
+                                <div class="song-icon"><i class="fa-solid fa-music"></i></div>
+                                <div>
+                                    <h4>Radio Lofi</h4>
+                                    <p>Chill cùng mưa</p>
+                                </div>
+                            </div>
+                            <div class="song-actions">
+                                <i class="fa-solid fa-xmark"></i>
+                            </div>
+                        </div>
+                        <div class="player-controls">
+                            <i class="fa-regular fa-thumbs-up"></i>
+                            <i class="fa-regular fa-thumbs-down"></i>
+                            <i class="fa-regular fa-comment"></i>
+                            <i class="fa-solid fa-share"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- TRANSACTION MODAL -->
+    <div id="transactionModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Thêm Giao Dịch</h3>
+                <i class="fa-solid fa-xmark close-modal" onclick="closeTransactionModal()"></i>
+            </div>
+            <form id="transactionForm" onsubmit="submitTransaction(event)">
+                <input type="hidden" id="trans-type" value="">
+
+                <div class="form-group">
+                    <label for="trans-amount">Số tiền (VNĐ)</label>
+                    <input type="number" id="trans-amount" placeholder="VD: 500000" required min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="trans-desc">Mô tả</label>
+                    <input type="text" id="trans-desc" placeholder="VD: Lương, Ăn sáng..." required>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submit-btn">Xác nhận</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
