@@ -1,3 +1,15 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+// Firebase configuration (Public config is safe for Frontend)
+const firebaseConfig = {
+    databaseURL: "https://linh-antigravity-test-default-rtdb.asia-southeast1.firebasedatabase.app"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
 document.addEventListener('DOMContentLoaded', () => {
     // Checkbox styling handler
     const checkboxes = document.querySelectorAll('.task-item input[type="checkbox"]');
@@ -71,16 +83,20 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('finance_data', JSON.stringify(data));
     }
 
-    // API calls and UI updates
+    // Firebase calls and UI updates
     async function loadMainData() {
         let data;
         try {
-            // Try fetching from backend first
-            const res = await fetch('/api/data');
-            if (!res.ok) throw new Error('Network error');
-            data = await res.json();
+            // Lấy dữ liệu từ Firebase
+            const snapshot = await get(ref(db, 'finances'));
+            if (snapshot.exists()) {
+                data = snapshot.val();
+                if (!data.transactions) data.transactions = [];
+            } else {
+                data = getLocalStorageData(); // Default
+            }
         } catch (err) {
-            console.log('Không tìm thấy Backend. Chuyển sang sử dụng LocalStorage (Chế độ chạy tĩnh trên GitHub Pages).');
+            console.error('Không tải được dữ liệu từ Firebase. Sử dụng LocalStorage.', err);
             data = getLocalStorageData();
         }
 
@@ -100,6 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('display-percentage').textContent = `${percentage}%`;
         document.getElementById('display-progress-bar').style.width = `${percentage}%`;
+
+        return data; // Return it so submitTransaction can use current state
     }
 
     // Global modal funcs for inline HTML onclicks
@@ -133,39 +151,18 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.disabled = true;
 
         try {
-            const res = await fetch('/api/transaction', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    type: type,
-                    amount: amount,
-                    description: desc
-                })
-            });
-
-            if (res.ok) {
-                closeTransactionModal();
-                loadMainData(); // Refresh API
-            } else {
-                alert('Có lỗi xảy ra khi lưu giao dịch');
-            }
-        } catch (err) {
-            console.log('Không kết nối được server, lưu cục bộ qua LocalStorage...');
-            
-            // Xử lý lưu local
-            let data = getLocalStorageData();
+            // Cập nhật lên Firebase trực tiếp từ Trình duyệt
+            let data = await loadMainData(); // Get current fresh state
             let numAmount = parseFloat(amount) || 0;
-            
+
             const transaction = {
-                id: data.transactions.length + 1,
+                id: (data.transactions ? data.transactions.length : 0) + 1,
                 type: type,
                 amount: numAmount,
                 description: desc,
                 date: new Date().toISOString().replace('T', ' ').substring(0, 19)
             };
-            
+
             if (type === "thu") {
                 data.balance += numAmount;
                 data.total_income += numAmount;
@@ -173,14 +170,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 data.balance -= numAmount;
                 data.total_expense += numAmount;
             }
-                
+
             data.transactions.push(transaction);
+
+            // Push to Firebase
+            await set(ref(db, 'finances'), data);
+
+            // Backup locally
             saveLocalStorageData(data);
 
             closeTransactionModal();
             loadMainData(); // Refresh UI
-            
-            alert('Đã lưu thành công (Chế độ Local).');
+
+        } catch (err) {
+            console.error('Lỗi khi lưu lên Firebase:', err);
+            alert('Không kết nối được Data (Lưu tạm Storage).');
         } finally {
             btn.textContent = 'Xác nhận';
             btn.disabled = false;
