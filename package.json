@@ -20,6 +20,7 @@
   "homepage": "https://github.com/linhttttt/Linh-Antigravity-test-pub#readme",
   "dependencies": {
     "cors": "^2.8.6",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "firebase-admin": "^13.6.1"
   }
 }
