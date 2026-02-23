@@ -1,0 +1,40 @@
+name: Deploy static content to Pages
+
+on:
+  push:
+    branches: ["gh-pages"]
+  workflow_dispatch:
+
+# Tốc độ quyền của GITHUB_TOKEN để cho phép deploy
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Tránh chạy đồng thời nhiều deploy
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Đẩy toàn bộ thư mục gốc hiện tại (do nhánh gh-pages chỉ chứa giao diện)
+          path: '.'
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
